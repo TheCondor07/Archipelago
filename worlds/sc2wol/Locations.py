@@ -64,10 +64,28 @@ def get_locations(world: Optional[MultiWorld], player: Optional[int]) -> Tuple[L
         LocationData("Safe Haven", "Safe Haven: Victory", SC2WOL_LOC_ID_OFFSET + 600,
                      lambda state: state._sc2wol_has_common_unit(world, player) and
                                    state._sc2wol_has_mobile_anti_air(world, player)),
+        LocationData("Safe Haven", "Safe Haven: North Nexus", SC2WOL_LOC_ID_OFFSET + 601,
+                     lambda state: state._sc2wol_has_common_unit(world, player) and
+                                   state._sc2wol_has_mobile_anti_air(world, player)),
+        LocationData("Safe Haven", "Safe Haven: East Nexus", SC2WOL_LOC_ID_OFFSET + 602,
+                     lambda state: state._sc2wol_has_common_unit(world, player) and
+                                   state._sc2wol_has_mobile_anti_air(world, player)),
+        LocationData("Safe Haven", "Safe Haven: South Nexus", SC2WOL_LOC_ID_OFFSET + 603,
+                     lambda state: state._sc2wol_has_common_unit(world, player) and
+                                   state._sc2wol_has_mobile_anti_air(world, player)),
         LocationData("Safe Haven", "Beat Safe Haven", None,
                      lambda state: state._sc2wol_has_common_unit(world, player) and
                                    state._sc2wol_has_mobile_anti_air(world, player)),
         LocationData("Haven's Fall", "Haven's Fall: Victory", SC2WOL_LOC_ID_OFFSET + 700,
+                     lambda state: state._sc2wol_has_common_unit(world, player) and
+                                   state._sc2wol_has_mobile_anti_air(world, player)),
+        LocationData("Haven's Fall", "Haven's Fall: North Hive", SC2WOL_LOC_ID_OFFSET + 701,
+                     lambda state: state._sc2wol_has_common_unit(world, player) and
+                                   state._sc2wol_has_mobile_anti_air(world, player)),
+        LocationData("Haven's Fall", "Haven's Fall: East Hive", SC2WOL_LOC_ID_OFFSET + 702,
+                     lambda state: state._sc2wol_has_common_unit(world, player) and
+                                   state._sc2wol_has_mobile_anti_air(world, player)),
+        LocationData("Haven's Fall", "Haven's Fall: South Hive", SC2WOL_LOC_ID_OFFSET + 703,
                      lambda state: state._sc2wol_has_common_unit(world, player) and
                                    state._sc2wol_has_mobile_anti_air(world, player)),
         LocationData("Haven's Fall", "Beat Haven's Fall", None,
