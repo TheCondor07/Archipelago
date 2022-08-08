@@ -61,9 +61,9 @@ for your world specifically on the webhost.
 `settings_page` which can be changed to a link instead of an AP generated settings page.
 
 `theme` to be used for your game specific AP pages. Available themes:
-| dirt  | grass (default) | grassFlowers | ice  | jungle  | ocean | partyTime |
-|---|---|---|---|---|---|---|
-| <img src="img/theme_dirt.JPG" width="100"> | <img src="img/theme_grass.JPG" width="100"> | <img src="img/theme_grassFlowers.JPG" width="100"> | <img src="img/theme_ice.JPG" width="100"> | <img src="img/theme_jungle.JPG" width="100"> | <img src="img/theme_ocean.JPG" width="100"> | <img src="img/theme_partyTime.JPG" width="100"> |
+| dirt  | grass (default) | grassFlowers | ice  | jungle  | ocean | partyTime | stone |
+|---|---|---|---|---|---|---|---|
+| <img src="img/theme_dirt.JPG" width="100"> | <img src="img/theme_grass.JPG" width="100"> | <img src="img/theme_grassFlowers.JPG" width="100"> | <img src="img/theme_ice.JPG" width="100"> | <img src="img/theme_jungle.JPG" width="100"> | <img src="img/theme_ocean.JPG" width="100"> | <img src="img/theme_partyTime.JPG" width="100"> | <img src="img/theme_stone.JPG" width="100"> |
 
 `bug_report_page` (optional) can be a link to a bug reporting page, most likely a GitHub issue page, that will be placed by the site to help direct users to report bugs.
 
@@ -236,7 +236,7 @@ class MyGameLocation(Location):
     game: str = "My Game"
 
     # override constructor to automatically mark event locations as such
-    def __init__(self, player: int, name = '', code = None, parent = None):
+    def __init__(self, player: int, name = "", code = None, parent = None):
         super(MyGameLocation, self).__init__(player, name, code, parent)
         self.event = code is None
 ```
@@ -487,14 +487,14 @@ def create_items(self) -> None:
     for item in map(self.create_item, mygame_items):
         if item in exclude:
             exclude.remove(item)  # this is destructive. create unique list above
-            self.world.itempool.append(self.create_item('nothing'))
+            self.world.itempool.append(self.create_item("nothing"))
         else:
             self.world.itempool.append(item)
 
     # itempool and number of locations should match up.
     # If this is not the case we want to fill the itempool with junk.
     junk = 0  # calculate this based on player settings
-    self.world.itempool += [self.create_item('nothing') for _ in range(junk)]
+    self.world.itempool += [self.create_item("nothing") for _ in range(junk)]
 ```
 
 #### create_regions
@@ -628,7 +628,7 @@ class MyGameLogic(LogicMixin):
     def _mygame_has_key(self, world: MultiWorld, player: int):
         # Arguments above are free to choose
         # it may make sense to use World as argument instead of MultiWorld
-        return self.has('key', player)  # or whatever
+        return self.has("key", player)  # or whatever
 ```
 ```python
 # __init__.py
