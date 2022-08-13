@@ -4,6 +4,7 @@ import multiprocessing
 import logging
 import asyncio
 import os.path
+import typing
 
 import nest_asyncio
 import sc2
@@ -134,6 +135,7 @@ class SC2Context(CommonContext):
         from kivy.uix.button import Button
         from kivy.uix.floatlayout import FloatLayout
         from kivy.properties import StringProperty
+        from kivy.uix.image import Image
 
         import Utils
 
@@ -177,6 +179,15 @@ class SC2Context(CommonContext):
         class MissionCategory(GridLayout):
             pass
 
+        class TrackerLayout(GridLayout):
+            pass
+
+        class TrackerRow(GridLayout):
+            pass
+
+        class Tracker22(GridLayout):
+            pass
+
         class SC2Manager(GameManager):
             logging_pairs = [
                 ("Client", "Archipelago"),
@@ -185,6 +196,7 @@ class SC2Context(CommonContext):
             base_title = "Archipelago Starcraft 2 Client"
 
             mission_panel = None
+            tracker_panel = None
             last_checked_locations = {}
             mission_id_to_button = {}
             launching = False
@@ -203,6 +215,13 @@ class SC2Context(CommonContext):
                 self.tabs.add_widget(panel)
 
                 Clock.schedule_interval(self.build_mission_table, 0.5)
+
+                tracker_panel = TabbedPanelItem(text="Tracker")
+                self.tracker_panel = tracker_panel.content = TrackerLayout()
+
+                Clock.schedule_interval(self.build_tracker, 5)
+
+                self.tabs.add_widget(tracker_panel)
 
                 return container
 
@@ -278,6 +297,28 @@ class SC2Context(CommonContext):
 
                     self.mission_panel.clear_widgets()
                     self.mission_panel.add_widget(Label(text="Launching Mission"))
+
+            def build_tracker(self, dt):
+                self.tracker_panel.clear_widgets()
+
+                for row in tracker_table:
+                    tracker_row = TrackerRow(size_hint_y=None, height=148)
+
+                    for grouping in row:
+                        unlock_group = Tracker22(size_hint_x=None, width=148)
+
+                        for unlock in grouping:
+                            unlock_image = Image(
+                                source=Utils.local_path(os.path.dirname(SC2WoLWorld.__file__), "images/" + unlock.image))
+                            unlock_group.add_widget(unlock_image)
+
+                        tracker_row.add_widget(unlock_group)
+
+                    tracker_row.add_widget(Label(text=""))
+
+                    self.tracker_panel.add_widget(tracker_row)
+
+                self.tracker_panel.add_widget(Label(text=""))
 
             def mission_callback(self, button):
                 if not self.launching:
@@ -797,6 +838,25 @@ def initialize_blank_mission_dict(location_table):
         unlocks[mission] = []
 
     return unlocks
+
+
+class TrackerUnlock(typing.NamedTuple):
+    unlock: str
+    code: int
+    image: str
+    alt_image: str
+
+
+tracker_table = [
+    [
+        [
+            TrackerUnlock("Marine", 0, "marine.png", "blank.png"),
+            TrackerUnlock("War Pigs", 500, "warpigs.png", "blank.png"),
+            TrackerUnlock("Stimpack (Marine)", 208, "stimpack.png", "blank.png"),
+            TrackerUnlock("Combat Shield (Marine)", 209, "combatshields.png", "blank.png")
+        ]
+    ]
+]
 
 
 if __name__ == '__main__':
