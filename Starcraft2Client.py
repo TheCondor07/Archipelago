@@ -1022,25 +1022,27 @@ starship_tracker = [
 ]
 
 dominion_tracker = [
-        [
-            TrackerUnlock("Ghost", ["blank.png", "ghost.png"]),
-            TrackerUnlock("", ["nothing.png"]),
-            TrackerUnlock("Ocular Implants (Ghost)",["blank.png", "oc_ghost.png"]),
-            TrackerUnlock("Crius Suit (Ghost)", ["blank.png", "cs_ghost.png"])
-        ],
-        [
-            TrackerUnlock("Spectre", ["blank.png", "spectre.png"]),
-            TrackerUnlock("", ["nothing.png"]),
-            TrackerUnlock("Psionic Lash (Spectre)", ["blank.png", "pl_spectre.png"]),
-            TrackerUnlock("Nyx-Class Cloaking Module (Spectre)", ["blank.png", "nccm_spectre.png"])
-        ],
-        [
-            TrackerUnlock("Thor", ["blank.png", "thor.png"]),
-            TrackerUnlock("", ["nothing.png"]),
-            TrackerUnlock("330mm Barrage Cannon (Thor)", ["blank.png", "330_thor.png"]),
-            TrackerUnlock("Immortality Protocol (Thor)", ["blank.png", "ip_thor.png"])
-        ]
+    [
+        TrackerUnlock("Ghost", ["blank.png", "ghost.png"]),
+        TrackerUnlock("", ["nothing.png"]),
+        TrackerUnlock("Ocular Implants (Ghost)",["blank.png", "oc_ghost.png"]),
+        TrackerUnlock("Crius Suit (Ghost)", ["blank.png", "cs_ghost.png"])
+    ],
+    [
+        TrackerUnlock("Spectre", ["blank.png", "spectre.png"]),
+        TrackerUnlock("", ["nothing.png"]),
+        TrackerUnlock("Psionic Lash (Spectre)", ["blank.png", "pl_spectre.png"]),
+        TrackerUnlock("Nyx-Class Cloaking Module (Spectre)", ["blank.png", "nccm_spectre.png"])
+    ],
+    [
+        TrackerUnlock("Thor", ["blank.png", "thor.png"]),
+        TrackerUnlock("", ["nothing.png"]),
+        TrackerUnlock("330mm Barrage Cannon (Thor)", ["blank.png", "330_thor.png"]),
+        TrackerUnlock("Immortality Protocol (Thor)", ["blank.png", "ip_thor.png"])
+    ]
 ]
+
+
 
 
 if __name__ == '__main__':
