@@ -301,24 +301,80 @@ class SC2Context(CommonContext):
             def build_tracker(self, dt):
                 self.tracker_panel.clear_widgets()
 
-                for row in tracker_table:
-                    tracker_row = TrackerRow(size_hint_y=None, height=148)
+                unlocks = []
+                for unlock in self.ctx.items_received:
+                    unlocks.append(lookup_id_to_name[unlock.item])
 
-                    for grouping in row:
-                        unlock_group = Tracker22(size_hint_x=None, width=148)
+                armory_unlock_top_section = GridLayout(cols=2)
+                armory_unlock_sub_section = GridLayout(cols=2, width=800, size_hint_x=None)
 
-                        for unlock in grouping:
-                            unlock_image = Image(
-                                source=Utils.local_path(os.path.dirname(SC2WoLWorld.__file__), "images/" + unlock.image))
-                            unlock_group.add_widget(unlock_image)
+                # Barracks Units
+                unit_section = GridLayout(rows=2, height=100, size_hint_y=None)
+                category_label = Label(text="[b]Infantry[/b]", halign='left', valign='bottom', height=20, size_hint_y=None, size_hint_x=None, markup=True)
+                unit_section.add_widget(category_label)
+                unit_row = TrackerRow(size_hint_y=None, height=78)
+                unit_section.add_widget(self.fill_unit_row(barracks_tracker, unit_row, unlocks))
+                armory_unlock_sub_section.add_widget(unit_section)
 
-                        tracker_row.add_widget(unlock_group)
+                # Base Units
+                unit_section = GridLayout(rows=2, height=100, size_hint_y=None)
+                category_label = Label(text="[b]Base[/b]", halign='left', valign='bottom', height=20,
+                                       size_hint_y=None, size_hint_x=None, markup=True)
+                unit_section.add_widget(category_label)
+                unit_row = TrackerRow(size_hint_y=None, height=78)
+                unit_section.add_widget(self.fill_unit_row(base_tracker, unit_row, unlocks))
+                armory_unlock_sub_section.add_widget(unit_section)
 
-                    tracker_row.add_widget(Label(text=""))
+                armory_unlock_top_section.add_widget(armory_unlock_sub_section)
+                armory_unlock_top_section.add_widget(Label(text=""))
 
-                    self.tracker_panel.add_widget(tracker_row)
+                # Vehicle Units
+                unit_section = GridLayout(rows=2, height=100, size_hint_y=None)
+                category_label = Label(text="[b]Vehicles[/b]", halign='left', valign='bottom', height=20,
+                                       size_hint_y=None, size_hint_x=None, markup=True)
+                unit_section.add_widget(category_label)
+                unit_row = TrackerRow(size_hint_y=None, height=78)
+                unit_section.add_widget(self.fill_unit_row(vehicle_tracker, unit_row, unlocks))
+                armory_unlock_sub_section.add_widget(unit_section)
 
+                # Starship Units
+                unit_section = GridLayout(rows=2, height=100, size_hint_y=None)
+                category_label = Label(text="[b]Starships[/b]", halign='left', valign='bottom', height=20,
+                                       size_hint_y=None, size_hint_x=None, markup=True)
+                unit_section.add_widget(category_label)
+                unit_row = TrackerRow(size_hint_y=None, height=78)
+                unit_section.add_widget(self.fill_unit_row(starship_tracker, unit_row, unlocks))
+                armory_unlock_sub_section.add_widget(unit_section)
+
+                # Dominion Units
+                unit_section = GridLayout(rows=2, height=100, size_hint_y=None)
+                category_label = Label(text="[b]Dominion[/b]", halign='left', valign='bottom', height=20,
+                                       size_hint_y=None, size_hint_x=None, markup=True)
+                unit_section.add_widget(category_label)
+                unit_row = TrackerRow(size_hint_y=None, height=78)
+                unit_section.add_widget(self.fill_unit_row(dominion_tracker, unit_row, unlocks))
+                armory_unlock_sub_section.add_widget(unit_section)
+
+                self.tracker_panel.add_widget(armory_unlock_top_section)
                 self.tracker_panel.add_widget(Label(text=""))
+
+            def fill_unit_row(self, row_data, row_panel, unlocks):
+                for grouping in row_data:
+                    unlock_group = Tracker22(size_hint_x=None, width=78)
+
+                    for unlock in grouping:
+                        image_path = unlock.images[min([unlocks.count(unlock.unlock), len(unlock.images)])]
+
+                        unlock_image = Image(
+                            source=Utils.local_path(os.path.dirname(SC2WoLWorld.__file__), "images/" + image_path),
+                            height=35, width=35)
+                        unlock_group.add_widget(unlock_image)
+
+                    row_panel.add_widget(unlock_group)
+
+                row_panel.add_widget(Label(text=""))
+
+                return row_panel
 
             def mission_callback(self, button):
                 if not self.launching:
@@ -842,20 +898,148 @@ def initialize_blank_mission_dict(location_table):
 
 class TrackerUnlock(typing.NamedTuple):
     unlock: str
-    code: int
-    image: str
-    alt_image: str
+    images: []
 
 
-tracker_table = [
-    [
+barracks_tracker = [
         [
-            TrackerUnlock("Marine", 0, "marine.png", "blank.png"),
-            TrackerUnlock("War Pigs", 500, "warpigs.png", "blank.png"),
-            TrackerUnlock("Stimpack (Marine)", 208, "stimpack.png", "blank.png"),
-            TrackerUnlock("Combat Shield (Marine)", 209, "combatshields.png", "blank.png")
+            TrackerUnlock("Marine", ["blank.png", "marine.png"]),
+            TrackerUnlock("War Pigs", ["blank.png", "warpigs.png"]),
+            TrackerUnlock("Stimpack (Marine)",["blank.png", "stimpack.png"]),
+            TrackerUnlock("Combat Shield (Marine)", ["blank.png", "combatshields.png"])
+        ],
+        [
+            TrackerUnlock("Medic", ["blank.png", "medic.png"]),
+            TrackerUnlock("", ["nothing.png"]),
+            TrackerUnlock("Advanced Medic Facilities (Medic)", ["blank.png", "amf_med.png"]),
+            TrackerUnlock("Stabilizer Medpacks (Medic)", ["blank.png", "sm_med.png"])
+        ],
+        [
+            TrackerUnlock("Firebat", ["blank.png", "firebat.png"]),
+            TrackerUnlock("Devil Dogs", ["blank.png", "devildogs.png"]),
+            TrackerUnlock("Incinerator Gauntlets (Firebat)", ["blank.png", "ig_fire.png"]),
+            TrackerUnlock("Juggernaut Plating (Firebat)", ["blank.png", "jp_fire.png"])
+        ],
+        [
+            TrackerUnlock("Marauder", ["blank.png", "marauder.png"]),
+            TrackerUnlock("Hammer Securities", ["blank.png", "hammersec.png"]),
+            TrackerUnlock("Concussive Shells (Marauder)", ["blank.png", "cs_maru.png"]),
+            TrackerUnlock("Kinetic Foam (Marauder)", ["blank.png", "kf_maru.png"])
+        ],
+        [
+            TrackerUnlock("Reaper", ["blank.png", "reaper.png"]),
+            TrackerUnlock("", ["nothing.png"]),
+            TrackerUnlock("U-238 Rounds (Reaper)", ["blank.png", "u238_reap.png"]),
+            TrackerUnlock("G-4 Clusterbomb (Reaper)", ["blank.png", "g4c_reap.png"])
+        ],
+]
+
+base_tracker = [
+        [
+            TrackerUnlock("Bunker", ["blank.png", "bunker.png"]),
+            TrackerUnlock("Sensor Tower", ["blank.png", "sensortower.png"]),
+            TrackerUnlock("Projectile Accelerator (Bunker)",["blank.png", "pa_bunker.png"]),
+            TrackerUnlock("Neosteel Bunker (Bunker)", ["blank.png", "nb_bunker.png"])
+        ],
+        [
+            TrackerUnlock("Missile Turret", ["blank.png", "missileturret.png"]),
+            TrackerUnlock("", ["nothing.png"]),
+            TrackerUnlock("Titanium Housing (Missile Turret)", ["blank.png", "th_miss.png"]),
+            TrackerUnlock("Hellstorm Batteries (Missile Turret)", ["blank.png", "hb_miss.png"])
+        ],
+        [
+            TrackerUnlock("Advanced Construction (SCV)", ["blank.png", "ac_scv.png"]),
+            TrackerUnlock("Dual-Fusion Welders (SCV)", ["blank.png", "dfw_scv.png"]),
+            TrackerUnlock("Fire-Suppression System (Building)", ["blank.png", "fss_base.png"]),
+            TrackerUnlock("Orbital Command (Building)", ["blank.png", "oc_base.png"])
         ]
+]
+
+vehicle_tracker = [
+        [
+            TrackerUnlock("Hellion", ["blank.png", "hellion.png"]),
+            TrackerUnlock("", ["nothing.png"]),
+            TrackerUnlock("Twin-Linked Flamethrower (Hellion)",["blank.png", "tlf_hell.png"]),
+            TrackerUnlock("Thermite Filaments (Hellion)", ["blank.png", "tf_hell.png"])
+        ],
+        [
+            TrackerUnlock("Vulture", ["blank.png", "vulture.png"]),
+            TrackerUnlock("", ["nothing.png"]),
+            TrackerUnlock("Cerberus Mine (Vulture)", ["blank.png", "cm_vult.png"]),
+            TrackerUnlock("Replenishable Magazine (Vulture)", ["blank.png", "rm_vult.png"])
+        ],
+        [
+            TrackerUnlock("Goliath", ["blank.png", "goliath.png"]),
+            TrackerUnlock("Spartan Company", ["blank.png", "spartancompany.png"]),
+            TrackerUnlock("Multi-Lock Weapons System (Goliath)", ["blank.png", "mlws_gol.png"]),
+            TrackerUnlock("Ares-Class Targeting System (Goliath)", ["blank.png", "acts_gol.png"])
+        ],
+        [
+            TrackerUnlock("Diamondback", ["blank.png", "diamondback.png"]),
+            TrackerUnlock("", ["nothing.png"]),
+            TrackerUnlock("Tri-Lithium Power Cell (Diamondback)", ["blank.png", "tlpw_dia.png"]),
+            TrackerUnlock("Shaped Hull (Diamondback)", ["blank.png", "sh_dia.png"])
+        ],
+        [
+            TrackerUnlock("Siege Tank", ["blank.png", "siegetank.png"]),
+            TrackerUnlock("Siege Breakers", ["blank.png", "siegebreakers.png"]),
+            TrackerUnlock("Maelstrom Rounds (Siege Tank)", ["blank.png", "mr_tank.png"]),
+            TrackerUnlock("Shaped Blast (Siege Tank)", ["blank.png", "sb_tank.png"])
+        ]
+]
+
+starship_tracker = [
+    [
+        TrackerUnlock("Medivac", ["blank.png", "medivac.png"]),
+        TrackerUnlock("", ["nothing.png"]),
+        TrackerUnlock("Rapid Deployment Tube (Medivac)", ["blank.png", "rdt_medi.png"]),
+        TrackerUnlock("Advanced Healing AI (Medivac)", ["blank.png", "aha_medi.png"])
+    ],
+    [
+        TrackerUnlock("Wraith", ["blank.png", "wraith.png"]),
+        TrackerUnlock("", ["nothing.png"]),
+        TrackerUnlock("Tomahawk Power Cells (Wraith)", ["blank.png", "tpc_wraith.png"]),
+        TrackerUnlock("Displacement Field (Wraith)", ["blank.png", "df_wraith.png"])
+    ],
+    [
+        TrackerUnlock("Viking", ["blank.png", "viking.png"]),
+        TrackerUnlock("Hel's Angel", ["blank.png", "helsangels.png"]),
+        TrackerUnlock("Ripwave Missiles (Viking)", ["blank.png", "rm_viking.png"]),
+        TrackerUnlock("Phobos-Class Weapons System (Viking)", ["blank.png", "pcws_viking.png"])
+    ],
+    [
+        TrackerUnlock("Banshee", ["blank.png", "banshee.png"]),
+        TrackerUnlock("Dusk Wings", ["blank.png", "duskwings.png"]),
+        TrackerUnlock("Cross-Spectrum Dampeners (Banshee)", ["blank.png", "csd_banshee.png"]),
+        TrackerUnlock("Shockwave Missile Battery (Banshee)", ["blank.png", "smb_banshee.png"])
+    ],
+    [
+        TrackerUnlock("Battlecruiser", ["blank.png", "battlecruiser.png"]),
+        TrackerUnlock("Jackson's Revenge", ["blank.png", "jacksonsrevenge.png"]),
+        TrackerUnlock("Missile Pods (Battlecruiser)", ["blank.png", "mp_bc.png"]),
+        TrackerUnlock("Defensive Matrix (Battlecruiser)", ["blank.png", "dm_bc.png"])
     ]
+]
+
+dominion_tracker = [
+        [
+            TrackerUnlock("Ghost", ["blank.png", "ghost.png"]),
+            TrackerUnlock("", ["nothing.png"]),
+            TrackerUnlock("Ocular Implants (Ghost)",["blank.png", "oc_ghost.png"]),
+            TrackerUnlock("Crius Suit (Ghost)", ["blank.png", "cs_ghost.png"])
+        ],
+        [
+            TrackerUnlock("Spectre", ["blank.png", "spectre.png"]),
+            TrackerUnlock("", ["nothing.png"]),
+            TrackerUnlock("Psionic Lash (Spectre)", ["blank.png", "pl_spectre.png"]),
+            TrackerUnlock("Nyx-Class Cloaking Module (Spectre)", ["blank.png", "nccm_spectre.png"])
+        ],
+        [
+            TrackerUnlock("Thor", ["blank.png", "thor.png"]),
+            TrackerUnlock("", ["nothing.png"]),
+            TrackerUnlock("330mm Barrage Cannon (Thor)", ["blank.png", "330_thor.png"]),
+            TrackerUnlock("Immortality Protocol (Thor)", ["blank.png", "ip_thor.png"])
+        ]
 ]
 
 
