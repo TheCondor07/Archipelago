@@ -479,9 +479,14 @@ def calc_difficulty(difficulty):
 async def starcraft_launch(ctx: SC2Context, mission_id: int):
     sc2_logger.info(f"Launching {lookup_id_to_mission[mission_id]}. If game does not launch check log file for errors.")
 
+    if ctx.difficulty_override >= 0:
+        difficulty = calc_difficulty(ctx.difficulty_override)
+    else:
+        difficulty = calc_difficulty(ctx.difficulty)
+
     with DllDirectory(None):
-        run_game(sc2.maps.get(maps_table[mission_id - 1]), [Bot(Race.Terran, ArchipelagoBot(ctx, mission_id),
-                                                                name="Archipelago", fullscreen=True)], realtime=True)
+        run_game(sc2.maps.get("{}_{}".format(maps_table[mission_id - 1], difficulty)),
+                 [Bot(Race.Terran, ArchipelagoBot(ctx, mission_id), name="Archipelago", fullscreen=True)], realtime=True)
 
 
 class ArchipelagoBot(sc2.bot_ai.BotAI):
