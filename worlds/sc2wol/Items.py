@@ -12,6 +12,8 @@ class ItemData(typing.NamedTuple):
     classification: ItemClassification = ItemClassification.useful
     quantity: int = 1
     parent_item: str = None
+    package: str = None
+    restrictions: list = []
 
 
 class StarcraftWoLItem(Item):
@@ -110,26 +112,26 @@ item_table = {
     "Dusk Wings": ItemData(506 + SC2WOL_ITEM_ID_OFFSET, "Mercenary", 6),
     "Jackson's Revenge": ItemData(507 + SC2WOL_ITEM_ID_OFFSET, "Mercenary", 7),
 
-    "Ultra-Capacitors": ItemData(600 + SC2WOL_ITEM_ID_OFFSET, "Laboratory", 0),
-    "Vanadium Plating": ItemData(601 + SC2WOL_ITEM_ID_OFFSET, "Laboratory", 1),
-    "Orbital Depots": ItemData(602 + SC2WOL_ITEM_ID_OFFSET, "Laboratory", 2),
-    "Micro-Filtering": ItemData(603 + SC2WOL_ITEM_ID_OFFSET, "Laboratory", 3),
-    "Automated Refinery": ItemData(604 + SC2WOL_ITEM_ID_OFFSET, "Laboratory", 4),
-    "Command Center Reactor": ItemData(605 + SC2WOL_ITEM_ID_OFFSET, "Laboratory", 5),
-    "Raven": ItemData(606 + SC2WOL_ITEM_ID_OFFSET, "Laboratory", 6),
-    "Science Vessel": ItemData(607 + SC2WOL_ITEM_ID_OFFSET, "Laboratory", 7, classification=ItemClassification.progression),
-    "Tech Reactor": ItemData(608 + SC2WOL_ITEM_ID_OFFSET, "Laboratory", 8),
-    "Orbital Strike": ItemData(609 + SC2WOL_ITEM_ID_OFFSET, "Laboratory", 9),
-    "Shrike Turret": ItemData(610 + SC2WOL_ITEM_ID_OFFSET, "Laboratory", 10, parent_item="Bunker"),
-    "Fortified Bunker": ItemData(611 + SC2WOL_ITEM_ID_OFFSET, "Laboratory", 11, parent_item="Bunker"),
-    "Planetary Fortress": ItemData(612 + SC2WOL_ITEM_ID_OFFSET, "Laboratory", 12, classification=ItemClassification.progression),
-    "Perdition Turret": ItemData(613 + SC2WOL_ITEM_ID_OFFSET, "Laboratory", 13, classification=ItemClassification.progression),
-    "Predator": ItemData(614 + SC2WOL_ITEM_ID_OFFSET, "Laboratory", 14, classification=ItemClassification.filler),
-    "Hercules": ItemData(615 + SC2WOL_ITEM_ID_OFFSET, "Laboratory", 15, classification=ItemClassification.progression),
-    "Cellular Reactor": ItemData(616 + SC2WOL_ITEM_ID_OFFSET, "Laboratory", 16, classification=ItemClassification.filler),
-    "Regenerative Bio-Steel": ItemData(617 + SC2WOL_ITEM_ID_OFFSET, "Laboratory", 17, classification=ItemClassification.filler),
-    "Hive Mind Emulator": ItemData(618 + SC2WOL_ITEM_ID_OFFSET, "Laboratory", 18, ItemClassification.progression),
-    "Psi Disrupter": ItemData(619 + SC2WOL_ITEM_ID_OFFSET, "Laboratory", 19, classification=ItemClassification.progression),
+    "Ultra-Capacitors": ItemData(600 + SC2WOL_ITEM_ID_OFFSET, "Laboratory", 0, package="Protoss Tier 1"),
+    "Vanadium Plating": ItemData(601 + SC2WOL_ITEM_ID_OFFSET, "Laboratory", 1, package="Protoss Tier 1"),
+    "Orbital Depots": ItemData(602 + SC2WOL_ITEM_ID_OFFSET, "Laboratory", 2, package="Protoss Tier 2"),
+    "Micro-Filtering": ItemData(603 + SC2WOL_ITEM_ID_OFFSET, "Laboratory", 3, package="Protoss Tier 2"),
+    "Automated Refinery": ItemData(604 + SC2WOL_ITEM_ID_OFFSET, "Laboratory", 4, package="Protoss Tier 3"),
+    "Command Center Reactor": ItemData(605 + SC2WOL_ITEM_ID_OFFSET, "Laboratory", 5, package="Protoss Tier 3"),
+    "Raven": ItemData(606 + SC2WOL_ITEM_ID_OFFSET, "Laboratory", 6, package="Protoss Tier 4"),
+    "Science Vessel": ItemData(607 + SC2WOL_ITEM_ID_OFFSET, "Laboratory", 7, classification=ItemClassification.progression, package="Protoss Tier 4"),
+    "Tech Reactor": ItemData(608 + SC2WOL_ITEM_ID_OFFSET, "Laboratory", 8, package="Protoss Tier 5"),
+    "Orbital Strike": ItemData(609 + SC2WOL_ITEM_ID_OFFSET, "Laboratory", 9, package="Protoss Tier 5"),
+    "Shrike Turret": ItemData(610 + SC2WOL_ITEM_ID_OFFSET, "Laboratory", 10, parent_item="Bunker", package="Zerg Tier 1"),
+    "Fortified Bunker": ItemData(611 + SC2WOL_ITEM_ID_OFFSET, "Laboratory", 11, parent_item="Bunker", package="Zerg Tier 1"),
+    "Planetary Fortress": ItemData(612 + SC2WOL_ITEM_ID_OFFSET, "Laboratory", 12, classification=ItemClassification.progression, package="Zerg Tier 2"),
+    "Perdition Turret": ItemData(613 + SC2WOL_ITEM_ID_OFFSET, "Laboratory", 13, classification=ItemClassification.progression, package="Zerg Tier 2"),
+    "Predator": ItemData(614 + SC2WOL_ITEM_ID_OFFSET, "Laboratory", 14, classification=ItemClassification.filler, package="Zerg Tier 3"),
+    "Hercules": ItemData(615 + SC2WOL_ITEM_ID_OFFSET, "Laboratory", 15, classification=ItemClassification.progression, package="Zerg Tier 3"),
+    "Cellular Reactor": ItemData(616 + SC2WOL_ITEM_ID_OFFSET, "Laboratory", 16, classification=ItemClassification.filler, package="Zerg Tier 4"),
+    "Regenerative Bio-Steel": ItemData(617 + SC2WOL_ITEM_ID_OFFSET, "Laboratory", 17, classification=ItemClassification.filler, package="Zerg Tier 4"),
+    "Hive Mind Emulator": ItemData(618 + SC2WOL_ITEM_ID_OFFSET, "Laboratory", 18, ItemClassification.progression, package="Zerg Tier 5"),
+    "Psi Disrupter": ItemData(619 + SC2WOL_ITEM_ID_OFFSET, "Laboratory", 19, classification=ItemClassification.progression, package="Zerg Tier 5"),
 
     "Zealot": ItemData(700 + SC2WOL_ITEM_ID_OFFSET, "Protoss", 0, classification=ItemClassification.progression),
     "Stalker": ItemData(701 + SC2WOL_ITEM_ID_OFFSET, "Protoss", 1, classification=ItemClassification.progression),
@@ -146,6 +148,8 @@ item_table = {
     "+2 Starting Supply": ItemData(802 + SC2WOL_ITEM_ID_OFFSET, "Supply", 2, quantity=0, classification=ItemClassification.filler),
 
     # "Keystone Piece": ItemData(850 + SC2WOL_ITEM_ID_OFFSET, "Goal", 0, quantity=0, classification=ItemClassification.progression_skip_balancing)
+
+    "Versatile Stimulants": ItemData(901 + SC2WOL_ITEM_ID_OFFSET, "Extras", 0, classification=ItemClassification.filler, package="Protoss Tier 1", restrictions=["Ultra-Capacitors"])
 }
 
 

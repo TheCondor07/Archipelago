@@ -1,3 +1,4 @@
+import random
 import typing
 
 from typing import List, Set, Tuple, Dict
@@ -34,7 +35,7 @@ class SC2WoLWorld(World):
 
     game = "Starcraft 2 Wings of Liberty"
     web = Starcraft2WoLWebWorld()
-    data_version = 3
+    data_version = 4
 
     item_name_to_id = {name: data.code for name, data in item_table.items()}
     location_name_to_id = {location.name: location.code for location in get_locations(None, None)}
@@ -108,15 +109,11 @@ def setup_events(player: int, locked_locations: typing.List[str], location_cache
 def get_excluded_items(multiworld: MultiWorld, player: int) -> Set[str]:
     excluded_items: Set[str] = set()
 
-    if get_option_value(multiworld, player, "upgrade_bonus") == 1:
-        excluded_items.add("Ultra-Capacitors")
-    else:
-        excluded_items.add("Vanadium Plating")
-
-    if get_option_value(multiworld, player, "bunker_upgrade") == 1:
-        excluded_items.add("Shrike Turret")
-    else:
-        excluded_items.add("Fortified Bunker")
+    # Exclude modded items if not using them
+    if not get_option_value(multiworld, player, "modded_unlocks"):
+        for name, data in item_table.items():
+            if data.type == "Extras":
+                excluded_items.add(name)
 
     for item in multiworld.precollected_items[player]:
         excluded_items.add(item.name)
@@ -124,6 +121,60 @@ def get_excluded_items(multiworld: MultiWorld, player: int) -> Set[str]:
     excluded_items_option = getattr(multiworld, 'excluded_items', [])
 
     excluded_items.update(excluded_items_option[player].value)
+
+    packages = {}
+    yaml_locked_items = get_option_set_value(multiworld, player, 'locked_items')
+
+    for name, data in item_table.items():
+        if data.package and name not in excluded_items:
+            if data.package in packages:
+                packages[data.package].append(name)
+            else:
+                packages[data.package] = [name]
+
+
+    if get_option_value(multiworld, player, "more_laboratory_research"):
+        max_lab_choices = 2
+    else:
+        max_lab_choices = 1
+
+    # A package is category of unlocks that can only have a max amount in the item pool at once
+    for package in packages:
+        if package.startswith("Protoss Tier") or package.startswith("Zerg Tier"):
+            max_choices = max_lab_choices
+        else:
+            # Currently all packages that can be replaced that isn't lab requires 2, if this changes will need to redo
+            max_choices = 2
+
+        choices = []
+
+        # check to see if any items are locked
+        for item in packages[package]:
+            if item in yaml_locked_items:
+                choices.append(item)
+                packages[package].remove(item)
+
+        while len(choices) < max_choices and len(packages[package]) > 0:
+            item = random.choice(packages[package])
+            packages[package].remove(item)
+
+            valid_choice = True
+
+            for restriction in item_table[item].restrictions:
+                if restriction in choices:
+                    valid_choice = False
+
+            for check_item in choices:
+                if item in item_table[check_item].restrictions:
+                    valid_choice = False
+
+            if valid_choice:
+                choices.append(item)
+            else:
+                excluded_items.add(item)
+
+        for item in packages[package]:
+            excluded_items.add(item)
 
     return excluded_items
 

@@ -12,22 +12,6 @@ class GameDifficulty(Choice):
     option_brutal = 3
 
 
-class UpgradeBonus(Choice):
-    """Determines what lab upgrade to use, whether it is Ultra-Capacitors which boost attack speed with every weapon
-    upgrade or Vanadium Plating which boosts life with every armor upgrade."""
-    display_name = "Upgrade Bonus"
-    option_ultra_capacitors = 0
-    option_vanadium_plating = 1
-
-
-class BunkerUpgrade(Choice):
-    """Determines what bunker lab upgrade to use, whether it is Shrike Turret which outfits bunkers with an automated
-    turret or Fortified Bunker which boosts the life of bunkers."""
-    display_name = "Bunker Upgrade"
-    option_shrike_turret = 0
-    option_fortified_bunker = 1
-
-
 class AllInMap(Choice):
     """Determines what version of All-In (final map) that will be generated for the campaign."""
     display_name = "All In Map"
@@ -95,6 +79,19 @@ class UnitsAlwaysHaveUpgrades(DefaultOnToggle):
     display_name = "Units Always Have Upgrades"
 
 
+class MoreLaboratoryResearch(DefaultOnToggle):
+    """If turned on, both options in each tier of laboratory research will be available to be obtained. Without this
+        only one laboratory research (chosen randomly) will be available for each tier matching vanilla. You can use
+        Locked Items to specify which research in a tier you want."""
+    display_name = "More Laboratory Research"
+
+
+class ModdedUnlocks(Toggle):
+    """Include non-vanilla Starcraft 2 unlocks in the item pool.
+    These will randomly replace normal Starcraft 2 unlocks."""
+    display_name = "Modded Unlocked"
+
+
 class LockedItems(ItemSet):
     """Guarantees that these items will be unlockable"""
     display_name = "Locked Items"
@@ -124,6 +121,8 @@ sc2wol_options: Dict[str, Option] = {
     "early_unit": EarlyUnit,
     "required_tactics": RequiredTactics,
     "units_always_have_upgrades": UnitsAlwaysHaveUpgrades,
+    "more_laboratory_research": MoreLaboratoryResearch,
+    "modded_unlocks": ModdedUnlocks,
     "locked_items": LockedItems,
     "excluded_items": ExcludedItems,
     "excluded_missions": ExcludedMissions
